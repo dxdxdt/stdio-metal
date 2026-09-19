@@ -23,7 +23,7 @@
 #endif
 
 #if FP_MATH_LEVEL == FP_MATH_NONE || FP_MATH_LEVEL == FP_MATH_FLT || \
-	FP_MATH_LEVEL == FP_MATH_DBL || FP_MATH_LEVEL == FP_MATH_FLT_DBL
+	FP_MATH_LEVEL == FP_MATH_DBL || FP_MATH_LEVEL
  /* OK */
 #else
 # error "Not a known floating-point math level."

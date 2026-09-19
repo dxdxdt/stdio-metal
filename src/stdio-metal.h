@@ -191,7 +191,6 @@ int metal_fflush(FILE *stream);
 #define FP_MATH_NONE    0
 #define FP_MATH_FLT     1
 #define FP_MATH_DBL     2
-#define FP_MATH_FLT_DBL 3
 
 // If not set on the compiler command line, set defaults here:
 #ifndef INT_MATH_LEVEL
