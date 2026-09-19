@@ -43,9 +43,9 @@ ease.
 
 ### GCC/Clang and C only
 
-For simplicity, the library is written to only compiles with GCC/Clang.
-The toolchains plagued with atrocities like MSVC are not supported. They
-shouldn't be used for microcontrollers in the first place.
+For simplicity, the library compiles only with GCC/Clang. The toolchains
+plagued with atrocities like MSVC are not supported. They shouldn't be
+used for microcontrollers in the first place.
 
 The library does not care about the compatibility with C++. Any
 integration issues with C++ must be dealt with by the user. C++
@@ -55,7 +55,7 @@ shouldn't be used for microcontrollers in the first place.
 
 For targets without dedicated FPU and floating-point instructions, if
 supported by the toolchain, the compiler generates code to emulate
-floating-point instructions with software("soft-float"). Almost no
+floating-point instructions in software("soft-float"). Almost no
 microcontrollers are equipped with FPU because there isn't really a use
 case for it. If, however, you decided to use floating point arithmetics
 in the microcontoller code, the compiler will silently add code
@@ -156,6 +156,9 @@ printf("hello, world!\n");
 /* ... */
 ```
 
+For other details, refer to the driver implementations in
+[drivers](drivers).
+
 ### Format Specifier Support Configuration
 
 This library can be compiled into several different configurations
@@ -187,3 +190,27 @@ hack in which only `float` support is present. In order to pass a
 32-bit integer. This can be done using a union of `float` and `int32_t`.
 The compiler may produce a warning that the type passed does not match
 the type specified by the format string.
+
+## Benchmark Data
+
+Measurements for a bare-minimum program with `scanf()` and `printf()`
+linked against. Collected data points are:
+
+  1. the size of the final binary
+  2. stack memory usage
+  3. buffer underrun/overrun: size of FIFO depth pushing baudrate of
+     115200
+
+### CH56x (riscv-imac 32-bit)
+
+Sample programs:
+
+  - [drivers/ch56x/ch56x_stdio-stack.c](drivers/ch56x/ch56x_stdio-stack.c)
+  - [drivers/ch56x/ch56x_stdio-perf.c](drivers/ch56x/ch56x_stdio-perf.c)
+
+Data:
+
+  - binary, `*printf()` only: 4916 bytes
+  - binary, `*printf()` and `*scanf()`: 7552 bytes
+  - stack use: ~160 bytes
+  - buffer: overrun(sustained 8 bytes)
