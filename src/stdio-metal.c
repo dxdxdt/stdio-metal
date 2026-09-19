@@ -67,25 +67,26 @@ uint64_t __aeabi_uldivmod(uint64_t numerator, uint64_t denominator);
 
 // "h" & "hh" means FL_SHORT is set if FL_CHAR is set, so test FL_CHAR first
 // "l" & "ll" means FL_LONG is set if FL_LL is set, so test FL_LL first
-#define FL_STAR	    0x01	/* '*': skip assignment		*/
-#define FL_WIDTH    0x02	/* width is present		*/
-#define FL_CHAR	    0x08	/* 'char' type modifier		*/
-#define FL_OCT	    0x10	/* octal number			*/
-#define FL_DEC	    0x20	/* decimal number		*/
-#define FL_HEX	    0x40	/* hexadecimal number		*/
-#define FL_MINUS    0x80	/* minus flag (field or value)	*/
-#define FL_SHORT    0x100	// 'short' type modifier
-#define FL_LL	    0x200	/* 'long long' type modifier	*/
+#define FL_STAR		0x01	/* '*': skip assignment		*/
+#define FL_WIDTH	0x02	/* width is present		*/
+#define FL_LONG		0x04	/* 'long' type modifier		*/
+#define FL_CHAR		0x08	/* 'char' type modifier		*/
+#define FL_OCT		0x10	/* octal number			*/
+#define FL_DEC		0x20	/* decimal number		*/
+#define FL_HEX		0x40	/* hexadecimal number		*/
+#define FL_MINUS	0x80	/* minus flag (field or value)	*/
+#define FL_SHORT	0x100	// 'short' type modifier
+#define FL_LL		0x200	/* 'long long' type modifier	*/
 
 // Flags as used in __conv_flt and __conv_dbl only
-#define FL_ERR      0x01    // input not valid
-#define FL_ANY	    0x02	/* any digit was readed	*/
-#define FL_OVFL	    0x04	/* overflow was		*/
-#define FL_DOT	    0x08	/* decimal '.' was	*/
-#define FL_MEXP	    0x10	/* exponent 'e' is neg.	*/
-#define FL_NAN      0x20    // "NAN"
-#define FL_INF      0x40    // "INF" or "INFINITY"
-#define FL_SIGN     0x100   // sign present, count in width
+#define FL_ERR		0x01	// input not valid
+#define FL_ANY		0x02	/* any digit was readed	*/
+#define FL_OVFL		0x04	/* overflow was		*/
+#define FL_DOT		0x08	/* decimal '.' was	*/
+#define FL_MEXP		0x10	/* exponent 'e' is neg.	*/
+#define FL_NAN		0x20	// "NAN"
+#define FL_INF		0x40	// "INF" or "INFINITY"
+#define FL_SIGN		0x100	// sign present, count in width
 
 #define FL_ZFILL	0x01
 #define FL_PLUS		0x02
@@ -96,14 +97,15 @@ uint64_t __aeabi_uldivmod(uint64_t numerator, uint64_t denominator);
 #define FL_H		0x40
 #define FL_NEGATIVE	0x200
 
+#define VFL_LONG	0x80
+#define VFL_LL		0x100
+
 #define FL_ALTUPP	FL_PLUS
 #define FL_ALTHEX	FL_SPACE
 
 #define	FL_FLTUPP	FL_ALT
 #define FL_FLTEXP	FL_PREC
-#define	FL_FLTFIX	FL_LONG
-
-#define FL_LONG	    0x04	/* 'long' type modifier		*/
+#define	FL_FLTFIX	VFL_LONG
 
 static int __begin_fp(FILE* stream, int width)
 {
@@ -1041,11 +1043,11 @@ int metal_vfprintf(FILE * stream, const char* fmt, va_list ap)
 		// Read format length
 		if (c == 'l')
 		{
-			flags |= FL_LONG;
+			flags |= VFL_LONG;
 			c = *fmt++;
 			if (c == 'l')
 			{
-				flags |= FL_LL;
+				flags |= VFL_LL;
 				c = *fmt++;
 			}
 		}
@@ -1340,7 +1342,7 @@ str_lpad:
 		{
 			flags &= ~FL_ALT;
 
-			if (flags & FL_LL)
+			if (flags & VFL_LL)
 			{
 #if INT_MATH_LEVEL >= INT_MATH_LONG_LONG
 				ll = va_arg(ap, long long);
@@ -1356,7 +1358,7 @@ str_lpad:
 				goto buf_addr;
 #endif
 			}
-			if (flags & FL_LONG)
+			if (flags & VFL_LONG)
 				x = va_arg(ap, long);
 			else
 				x = va_arg(ap, int);
@@ -1414,7 +1416,7 @@ str_lpad:
 			}
 		}
 
-		if (flags & FL_LL)
+		if (flags & VFL_LL)
 		{
 #if INT_MATH_LEVEL >= INT_MATH_LONG_LONG
 			int	ch;
@@ -1440,7 +1442,7 @@ ulltoa:
 			goto buf_addr;
 #endif
 		}
-		if (sizeof(long) > sizeof(int) && (flags & FL_LONG))
+		if (sizeof(long) > sizeof(int) && (flags & VFL_LONG))
 			x = va_arg(ap, unsigned long);
 		else
 		{
@@ -1790,11 +1792,6 @@ size_t metal_fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 	return i;
 }
-
-#undef FL_LONG
-#undef FL_LL
-#define FL_LONG		0x80
-#define FL_LL		0x100
 
 // "h" & "hh" means FL_SHORT is set if FL_CHAR is set, so test FL_CHAR first
 // "l" & "ll" means FL_LONG is set if FL_LL is set, so test FL_LL first
