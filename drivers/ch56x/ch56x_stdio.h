@@ -13,8 +13,8 @@ struct ch56x_stdio_desc {
 	/*
 	 * Baudrate
 	 *
-	 * If set to zero, the corresponding stdio FILE object will not
-	 * be disabled. This is usually set to 115200.
+	 * If set to zero, the corresponding stdio FILE object is
+	 * disabled. Usually set to 115200.
 	 */
 	uint32_t baudrate;
 	/*
@@ -54,10 +54,11 @@ struct ch56x_stdio_desc {
  * stderr(2). There is no restriction as to which UART ports are
  * configured for which stdio. For example,
  *
- *  - `{{1, 115200, 1, 1}, {1, 115200, 1, 1}, {1, 115200, 1, 1}}`: use
+ *  - `{{115200, 1, 1, 1}, {115200, 1, 1, 1}, {115200, 1, 1, 1}}`: use
  *    UART1 for all stdio (the usual set up)
- *  - `{{0, 115200, 1, 1}, {0, 115200, 1, 1}, {1, 115200, 1, 1}}`:
+ *  - `{{115200, 1, 1, 1}, {115200, 1, 1, 1}, {115200, 1, 1, 1}}`:
  *    redirect stdin and stdout to UART0 and use UART1 for stderr
+ *  - `{ }, {115200, 1, 1, 1}, {115200, 1, 1, 1}}`: use output only
  *
  * Set `sys_freq` to the system frequency in Hz.
  */

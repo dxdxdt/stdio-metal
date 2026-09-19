@@ -261,8 +261,8 @@ void ch56x_stdio_open(const struct ch56x_stdio_desc desc[3], uint32_t sys_freq)
 
 	for (size_t i = 0; i < 3; i++) {
 		if (desc[i].baudrate == 0) {
-			__iob[i].udata = (void*)LONG_MAX;
-			continue;
+			port = LONG_MAX;
+			goto cont;
 		}
 
 		x = 10 * sys_freq * 2 / 16 / desc[i].baudrate;
@@ -325,12 +325,13 @@ void ch56x_stdio_open(const struct ch56x_stdio_desc desc[3], uint32_t sys_freq)
 			set_smt_flag(is_out, desc[i].smt_set, desc[i].smt_flag, &R32_PB_SMT, 4, 3);
 			break;
 		default:
-			continue;
+			port = LONG_MAX;
+			goto cont;
 		}
 
 		if (is_out)
 			port |= CH56X_STDIO_PORT_OUT;
-
+cont:
 		fdev_setup_stream(__iob + i,
 				  ch56x_stdio_write,
 				  ch56x_stdio_read,
