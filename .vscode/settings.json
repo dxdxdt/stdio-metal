@@ -1,0 +1,10 @@
+{
+	"editor.tabSize": 8,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"clangd.fallbackFlags": [
+		"-I${workspaceFolder}/src",
+		"-xc",
+		"-m32"
+	]
+}
