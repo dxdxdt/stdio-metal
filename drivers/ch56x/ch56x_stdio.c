@@ -336,7 +336,7 @@ cont:
 				  ch56x_stdio_write,
 				  ch56x_stdio_read,
 				  ch56x_stdio_flush,
-				  _FDEV_SETUP_RW,
+				  _FDEV_SETUP_RW | _FDEV_SETUP_CRLF,
 				  (void*)port);
 	}
 }
